@@ -78,48 +78,50 @@ public class Main {
                 tmp[SOUTH] = clone[TOP];
                 tmp[BOTTOM] = clone[SOUTH];
                 tmp[NORTH] = clone[BOTTOM];
-                posY+=1;
+                posX-=1;
             }
             else if (Direction.NORTH.equals(direction)) {
                 tmp[TOP] = clone[SOUTH];
                 tmp[SOUTH] = clone[BOTTOM];
                 tmp[BOTTOM] = clone[NORTH];
                 tmp[NORTH] = clone[TOP];
-                posY-=1;
+                posX+=1;
             }
             else if (Direction.EAST.equals(direction)) {
                 tmp[TOP] = clone[WEST];
                 tmp[EAST] = clone[TOP];
                 tmp[BOTTOM] = clone[EAST];
                 tmp[WEST] = clone[BOTTOM];
-                posX+=1;
+                posY+=1;
             }
             else{
                 tmp[WEST] = clone[TOP];
                 tmp[BOTTOM] = clone[WEST];
                 tmp[EAST] = clone[BOTTOM];
                 tmp[TOP] = clone[EAST];
-                posX-=1;
+                posY-=1;
             }
-            if(graph[posY][posX] == 0){
-                graph[posY][posX] = tmp[BOTTOM];
+            if(graph[posX][posY] == 0){
+                graph[posX][posY] = tmp[BOTTOM];
             }else{
-                tmp[BOTTOM] = graph[posY][posX];
-                graph[posY][posX] = 0;
+                tmp[BOTTOM] = graph[posX][posY];
+                graph[posX][posY] = 0;
             }
         }
 
         private boolean isValidDirection(Direction direction , int[][] graph) {
             if(direction.equals(Direction.WEST)){
-                return posX  -1 >= 0;
+                return posY - 1 >= 0 ;
             }if(direction.equals(Direction.EAST)){
-                return posX + 1 < graph[0].length ;
-            }if(direction.equals(Direction.NORTH)){
-                return posY - 1 >= 0;
+                return posY + 1 < graph[0].length;
             }if(direction.equals(Direction.SOUTH)){
-                return posY + 1 < graph.length;
+                return posX - 1 >= 0;
+            }if(direction.equals(Direction.NORTH)){
+                return posX + 1 < graph.length;
             }
             throw new AssertionError();
         }
     }
+
 }
+
