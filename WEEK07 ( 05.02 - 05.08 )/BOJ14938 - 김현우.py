@@ -63,18 +63,18 @@ for i in range(n):
     # 다익스트라 알고리즘 탬플릿
     q = []
     distances = [INF for _ in range(n)]
-    heapq.heappush(q, [0, i])
+    heapq.heappush(q, [i, 0])
     distances[i] = 0
 
     while q:
-        curDist, curVertex = heapq.heappop(q)
+        curVertex, curDist = heapq.heappop(q)
         if distances[curVertex] < curDist:
             continue
         for nextVertex, nextDist in edgeWeightList[curVertex]:
             if nextDist + curDist < distances[nextVertex]:
                 nextDist += curDist
                 distances[nextVertex] = nextDist
-                heapq.heappush(q, [nextDist, nextVertex])
+                heapq.heappush(q, [nextVertex, nextDist])
 
     # 다익스트라 알고리즘 수행 후 distances 리스트에는 각 지점까지의 최단경로가 저장되어 있음
     # distances 리스트의 모든 노드에 대해 진입 가능하면 해당 노드의 아이템 개수를 더함
@@ -87,3 +87,4 @@ for i in range(n):
     maxItemCount = max(maxItemCount, temp)
 
 print(maxItemCount)
+
