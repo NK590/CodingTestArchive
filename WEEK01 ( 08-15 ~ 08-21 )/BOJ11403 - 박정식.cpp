@@ -1,5 +1,6 @@
 ﻿#include <iostream>
-#include<vector>
+#include <vector>
+#include <stack>
 #include <cstring>
 #define MAX 100 + 1
 using namespace std;
@@ -19,15 +20,24 @@ void Reset()
     }
 }
 
-void Dfs(int x) 
+void Dfs(int node) 
 {
-    for (int i = 0; i < graph[x].size(); i++)
+    stack<int> s;    
+    s.push(node);
+
+    while (!s.empty())
     {
-        // 해당 위치로 가는길이 있는데 아직 방문하지 않았다면
-        if (!visit[graph[x][i]])
+        int cur = s.top();
+        s.pop();
+
+        for (int i = 0; i < graph[cur].size(); i++)
         {
-            visit[graph[x][i]] = 1;
-            Dfs(graph[x][i]);
+            // 이미 방문을 했다면 스킵하기
+            if (visit[graph[cur][i]] == 1)
+                continue;
+
+            visit[graph[cur][i]] = 1;
+            s.push(graph[cur][i]);
         }
     }
 }
@@ -45,6 +55,7 @@ int main()
                 graph[i].push_back(j);
         }
     }
+
     for (int i = 0; i < N; i++) 
     {
         // 각 노드마다 방문여부 초기화 해주고
