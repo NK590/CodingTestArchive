@@ -22,7 +22,7 @@ import sys
 sys.setrecursionlimit(10 ** 7)
 
 M, N, K = map(int, input().split())
-_board = [[1] * N for _ in range(M)]
+_board = [[1] * N for _ in range(M)] 
 dr = (0, 1, 0, -1)
 dc = (1, 0, -1, 0)
 
@@ -30,7 +30,7 @@ def rec_check(r1, c1, r2, c2):
     for i in range(r1, r2):
         for j in range(c1, c2):
             _board[i][j] = 0
-
+ 
 for _ in range(K):
     # 좌표랑 row col 반대주의!
     c1, r1, c2, r2 = map(int, input().split())
