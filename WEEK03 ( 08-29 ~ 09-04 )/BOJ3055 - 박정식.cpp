@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #define MAX 50 + 1
 #define X second
 #define Y first
@@ -13,7 +12,6 @@ int dy[4] = { 1, -1, 0, 0 };
 
 char map[MAX][MAX];
 int R, C;
-
 
 queue < pair<int, int>> sq;
 queue < pair<int, int>> wq;
@@ -44,7 +42,6 @@ void MoveWater()
 int MoveS()
 {
 	int time = 0;
-	bool check = false;
 	while (!sq.empty())
 	{
 		time++;
@@ -63,36 +60,18 @@ int MoveS()
 				if (ny < 0 || nx < 0 || ny >= R || nx >= C)
 					continue;
 				if (map[ny][nx] == 'D')
-				{
-					check = true;
-					break;
-				}
+					return time;
+
 				if (map[ny][nx] != '.')
 					continue;
 
 				map[ny][nx] = 'S';
 				sq.push({ny, nx});
 			}
-
 		}
-		if (check == true)
-			break;
-
 	}
-	if (check == false)
-		time = -1;
-	return time;
-}
 
-void Print()
-{
-	for (int y = 0; y < R; y++)
-	{
-		for (int x = 0; x < C; x++)
-			cout << map[y][x];
-
-		cout << endl;
-	}
+	return -1;
 }
 
 int main()
@@ -111,10 +90,7 @@ int main()
 				wq.push({y, x});
 		}
 	}	
-	// * : 물, S 고슴도치 위치, 비버의 굴 D, 돌 X
 
-	
-	//Print();
 	int time = MoveS();
 	if (time == -1)
 		cout << "KAKTUS" << endl;

@@ -14,7 +14,6 @@ int dy[4] = { 1, -1, 0, 0 };
 char map[MAX][MAX];
 int w, h;
 
-
 queue < pair<int, int>> sq;
 queue < pair<int, int>> fq;
 
@@ -44,7 +43,6 @@ void MoveFire()
 int MoveS()
 {
 	int time = 0;
-	bool check = false;
 	while (!sq.empty())
 	{
 		time++;
@@ -61,37 +59,18 @@ int MoveS()
 				int ny = cur.Y + dy[dir];
 
 				if (ny < 0 || nx < 0 || ny >= h || nx >= w)
-				{
-					check = true;
-					break;
-				}
+					return time;
+
 				if (map[ny][nx] != '.')
 					continue;
 
 				map[ny][nx] = '@';
 				sq.push({ ny, nx });
 			}
-
 		}
-		if (check == true)
-			break;
-
 	}
-	if (check == false)
-		time = -1;
-	return time;
-}
 
-void Print()
-{
-	for (int y = 0; y < h; y++)
-	{
-		for (int x = 0; x < w; x++)
-		{
-			cout << map[y][x];
-		}
-		cout << endl;
-	}
+	return -1;
 }
 
 void Reset(int w, int h)
@@ -136,11 +115,7 @@ int main()
 			cout << time << endl;
 
 		Reset(w, h);
-		//Print();
 	}
-
-
-
 
 	return 0;
 }
