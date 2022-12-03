@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <vector>
+#include <memory.h>
 #define Y first
 #define X second
 
