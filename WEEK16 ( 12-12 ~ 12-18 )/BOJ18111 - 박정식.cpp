@@ -15,21 +15,15 @@ void Solution()
 	for (int h = 0; h <= maxHeight; h++)
 	{
 		int currentTime = 0;
-		int currentOwnBlocks = ownBlocks;
+
 		for (int y = 0; y < col; y++)
 		{
 			for (int x = 0; x < row; x++)
 			{
-				if (map[y][x] > h)
-				{
-					currentTime += ((map[y][x] - h) *2);
-					currentOwnBlocks += (map[y][x] - h);
-				}
+				if (map[y][x] > h)				
+					currentTime += ((map[y][x] - h) *2);				
 				else if (map[y][x] < h)
-				{
-					currentTime += (h - map[y][x]);
-					currentOwnBlocks += (h - map[y][x]);
-				}
+					currentTime += (h - map[y][x]);				
 			}
 		}
 
@@ -46,18 +40,6 @@ void Solution()
 	}
 
 	cout << t << " " << height;
-}
-
-void Print()
-{
-	for (int y = 0; y < col; y++)
-	{
-		for (int x = 0; x < row; x++)
-		{
-			cout << map[y][x] << " ";
-		}
-		cout << endl;
-	}
 }
 
 void Input()
