@@ -9,16 +9,6 @@ string gear[6];
 bool visit[6];
 queue<pair<int, int>> q;
 
-void Print()
-{
-	cout << endl;
-	for (int i = 1; i < 5; i++)
-	{
-		cout << gear[i] << endl;
-	}
-	cout << endl;
-}
-
 void Reset()
 {
 	for (int i = 1; i < 5; i++)
@@ -54,7 +44,6 @@ void Rotation(int index, int dir)
 		if (gear[index][1] != gear[index + 1][6])
 			Rotation(index + 1, dir * -1);
 	}
-
 }
 
 void Solution()
