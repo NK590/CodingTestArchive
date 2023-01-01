@@ -1,5 +1,3 @@
-package cordingTest;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,7 +9,6 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	
 	static int[] X = { 1, 0, -1, 0 };
 	static int[] Y = { 0, 1, 0, -1 };
 
