@@ -31,9 +31,6 @@ void Solution()
 				dp[pos] = 1;
 				break;
 			}
-			else {
-				dp[pos] = 0;
-			}
 		}
 	}
 
