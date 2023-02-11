@@ -2,28 +2,32 @@
 #include<vector>
 #include<queue>
 using namespace std;
-#define INF 10000000
+#define INF 100000000
 
+// í…ŒìŠ¤íŠ¸ì¼€ì´ìŠ¤ìˆ˜, ë…¸ë“œì˜ ìˆ˜, ë„ë¡œì˜ ìˆ˜, ì›”í™ˆì˜ ìˆ˜
 int TC, N, M, W;
+// ì¶œë°œë…¸ë“œë¶€í„° ê° ë…¸ë“œì˜ ê°€ê¸°ìœ„í•œ ë¹„ìš©ê°’ ë°°ì—´
 int dist[501];
-bool cycle;//À½ÀÇ »çÀÌÅ¬À» °®´ÂÁö È®ÀÎ
+
 vector<pair<int, int>> graph[501];
 
-void BellmanFord() 
+// ì‚¬ì´í´ì´ ìˆë‹¤ë©´ trueë°˜í™˜
+bool BellmanFord() 
 {
-	cycle = false;
-	// ¸ğµç ³ëµå INF ÃÊ±âÈ­
+	//ìŒì˜ ì‚¬ì´í´ì„ ê°–ëŠ”ì§€ í™•ì¸
+	bool cycle = false;
+	// ëª¨ë“  ë…¸ë“œ INF ì´ˆê¸°í™”
 	for (int i = 1; i <= N; i++)
 		dist[i] = INF; 
 
-	// ½ÃÀÛÁ¡ 0À¸·Î ÃÊ±âÈ­
+	// ì‹œì‘ì  0ìœ¼ë¡œ ì´ˆê¸°í™”
 	dist[1] = 0; 
 
 	for (int i = 1; i <= N; i++) 
 	{
 		for (int j = 1; j <= N; j++) 
 		{
-			// j³ëµå¸¦ ±âÁØÀ¸·Î ¿¬°áµÈ ³ëµåµé Ã¼Å©
+			// jë…¸ë“œë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì—°ê²°ëœ ë…¸ë“œë“¤ ì²´í¬
 			for (int k = 0; k < graph[j].size(); k++)
 			{
 				int next = graph[j][k].second;
@@ -32,13 +36,14 @@ void BellmanFord()
 				if (dist[next] > dist[j] + cost) 
 				{
 					dist[next] = dist[j] + cost;
-					// N-1±îÁö È®ÀÎÇÑ ÀÌÈÄ¿¡µµ °»½ÅÀÌ µÈ´Ù¸é À½ÀÇ »çÀÌÅ¬ÀÌ Á¸Àç
-					if (i == N) cycle = true;
+					// N-1ê¹Œì§€ í™•ì¸í•œ ì´í›„ì—ë„ ê°±ì‹ ì´ ëœë‹¤ë©´ ìŒì˜ ì‚¬ì´í´ì´ ì¡´ì¬
+					if (i == N) return true;
 				}
 
 			}
 		}
 	}
+	return false;
 }
 
 void Solution()
@@ -47,26 +52,30 @@ void Solution()
 	{
 		cin >> N >> M >> W;
 
-		for (int i = 0; i < M; i++)
+		for (int i = 1; i <= M; i++)
 		{
 			int from;
 			int to;
 			int distance;
+
 			cin >> from >> to >> distance;
+
 			graph[from].push_back(make_pair(distance, to));
 			graph[to].push_back(make_pair(distance, from));
 		}
 
-		for (int i = 0; i < W; i++)
+		for (int i = 1; i <= W; i++)
 		{
 			int from;
 			int to;
 			int distance;
+
 			cin >> from >> to >> distance;
+
 			graph[from].push_back(make_pair(-distance, to));
 		}
-		BellmanFord();
-		if (cycle == true)
+
+		if (BellmanFord() == true)
 			cout << "YES" << endl;
 		else
 			cout << "NO" << endl;
