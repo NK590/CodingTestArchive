@@ -1,0 +1,108 @@
+package cordingTest2;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class Main {
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		String[] str = br.readLine().split(" ");
+		int N = Integer.valueOf(str[0]);
+		int M = Integer.valueOf(str[1]);
+		int K = Integer.valueOf(str[2]);
+		long[][] dp = new long[N + 1][K + 1]; // N = 도시, M = 포장할 도로 수, 값은 시간
+		boolean[][] visited = new boolean[N + 1][K + 1];
+		PriorityQueue<Node> pq = new PriorityQueue<>();
+
+		List<List<int[]>> graph = new ArrayList<>();
+
+		for (int i = 0; i <= N; i++) {
+			graph.add(new ArrayList<>());
+			Arrays.fill(dp[i], Long.MAX_VALUE);
+
+			if (i != N) {
+				Arrays.fill(visited[i], false);
+			}
+		}
+
+		for (int i = 0; i < M; i++) {
+			str = br.readLine().split(" ");
+			int a = Integer.valueOf(str[0]);
+			int b = Integer.valueOf(str[1]);
+			int c = Integer.valueOf(str[2]);
+
+			graph.get(a).add(new int[] { b, c });
+			graph.get(b).add(new int[] { a, c });
+		}
+
+		pq.add(new Node(1, K, dp[1][K]));
+		dp[1][K] = 0;
+
+		while (!pq.isEmpty()) {
+			Node node = pq.poll();
+			int a = node.node;
+			int k = node.c;
+
+			if (visited[a][k])
+				continue;
+
+			visited[a][k] = true;
+
+			for (int[] x : graph.get(a)) {
+				int b = x[0];
+				int c = x[1];
+
+				// 도로를 포장한다.
+				if (k > 0 && dp[b][k - 1] > dp[a][k]) {
+					dp[b][k - 1] = dp[a][k];
+					pq.add(new Node(b, k - 1, dp[b][k - 1]));
+				}
+
+				// 하지 않는다.
+				if (dp[b][k] > dp[a][k] + c) {
+					dp[b][k] = dp[a][k] + c;
+					pq.add(new Node(b, k, dp[b][k]));
+				}
+			}
+		}
+
+		long min = Long.MAX_VALUE;
+
+		for (int i = 0; i <= K; i++) {
+			min = Math.min(min, dp[N][i]);
+		}
+
+		System.out.println(min);
+	}
+
+	public static class Node implements Comparable<Node> {
+		int node;
+		int c;
+		long dist;
+
+		Node(int node, int c, long dist) {
+			this.node = node;
+			this.c = c;
+			this.dist = dist;
+		}
+
+		@Override
+		public int compareTo(Node o) {
+			if (this.dist > o.dist)
+				return 1;
+			else if (this.dist == o.dist)
+				return 0;
+			else
+				return -1;
+		}
+	}
+}
