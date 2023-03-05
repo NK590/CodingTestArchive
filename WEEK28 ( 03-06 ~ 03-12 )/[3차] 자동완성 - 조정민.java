@@ -33,6 +33,7 @@ class Solution {
         
         // 검색
         for(String word : words) {
+            // 불필요한 입력 횟수 카운터
             int cnt = 0;
             String[] str = word.split("");
             Node curNode = head;
@@ -43,14 +44,17 @@ class Solution {
                 answer++;
                 
                 if(i == str.length - 1) {
+                    // 검색하는 단어가 끝났는데도 자식 노드가 있을 경우 초기화
                     if(curNode.child.size() != 0) {
                         cnt = 0;
                     }
                 } else {
-                    if(curNode.data == null && curNode.child.size() == 1) {
-                        cnt++;
-                    } else {
+                    // 현재 노드에서 끝나는 단어가 있거나 현재 노드의 자식 노드가 1개 보다 많을 경우 초기화
+                    if(curNode.data != null || curNode.child.size() > 1) {
                         cnt = 0;
+                    } else {
+                        // 현재 노드에서 끝나는 단어가 없으면서 자식 노드가 1개 인 경우 카운터 1 증가
+                        cnt++;
                     }
                 }
             }
