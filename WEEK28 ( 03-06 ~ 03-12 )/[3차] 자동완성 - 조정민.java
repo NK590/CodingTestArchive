@@ -8,6 +8,7 @@ class Solution {
         int answer = 0;
         
         Node head = new Node(null, null);
+        // Node head = new Node(null, null, null);
         
         // 트라이 생성
         for(String word : words) {
@@ -21,6 +22,7 @@ class Solution {
                     curNode = curNode.child.get(x);
                 } else {
                     Node temp = new Node(x, null);
+                    // Node temp = new Node(x, null, curNode);
                     curNode.child.put(x, temp);
                     curNode = temp;
                 }
@@ -78,3 +80,86 @@ class Solution {
         
     }
 }
+
+
+
+
+// 부모 노드를 기억하는 경우 (위에꺼보 느리다, 메모리도 많이 먹을 듯?)
+import java.util.*;
+
+class Solution {
+    public int solution(String[] words) {
+        int answer = 0;
+        
+        Node head = new Node(null, null, null);
+        
+        // 트라이 생성
+        for(String word : words) {
+            String[] str = word.split("");
+            Node curNode = head;
+                
+            for(int i = 0; i < str.length; i++) {
+                String x = str[i];
+                
+                if(curNode.child.containsKey(x)) {
+                    curNode = curNode.child.get(x);
+                } else {
+                    Node temp = new Node(x, null, curNode);
+                    curNode.child.put(x, temp);
+                    curNode = temp;
+                }
+                
+                if(i == str.length - 1) {
+                    curNode.data = word;
+                }
+            }
+        }
+        
+        // 검색
+        for(String word : words) {
+            int cnt = 0;
+            String[] str = word.split("");
+            Node curNode = head;
+            
+            for(int i = 0; i < str.length; i++) {
+                String x = str[i];
+                curNode = curNode.child.get(x);
+                answer++;
+            }
+            
+            // 현재 단어가 끝났는데도 자식 노드가 있으면 자동완성 사용 불가능
+            if(curNode.child.size() == 0) {
+                while(curNode.parentNode != head) {
+                    curNode = curNode.parentNode;
+                    
+                    if(curNode.data != null || curNode.child.size() > 1) {
+                        break;
+                        
+                    } else {
+                        answer -= 1;
+                    }
+                }
+            }
+            
+        }
+        
+        return answer;
+    }
+    
+    class Node {
+        String key;
+        String data;
+        Node parentNode;
+        Map<String, Node> child;
+        
+        Node(String key, String data, Node parentNode) {
+            this.key = key;
+            this.data = data;
+            this.parentNode = parentNode;
+            this.child = new HashMap<>();
+        }
+        
+    }
+}
+
+            
