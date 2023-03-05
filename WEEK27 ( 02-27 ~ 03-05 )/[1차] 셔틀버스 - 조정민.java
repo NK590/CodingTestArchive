@@ -16,6 +16,8 @@ class Solution {
         
         Collections.sort(timeList);
         
+        // n 은 버스의 수
+        // 마지막 버스만 남기고 다 보낸다.
         int cnt2 = n;
         while(cnt2 > 1) {
             int cnt = m;
