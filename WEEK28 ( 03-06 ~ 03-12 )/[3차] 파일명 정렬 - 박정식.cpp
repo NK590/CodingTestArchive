@@ -18,23 +18,23 @@ vector<string> v2 = { "F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunder
 
 bool Compare(File file1, File file2)
 {
-	// Çìµå ¸ÕÀú ºñ±³
+	// í—¤ë“œ ë¨¼ì € ë¹„êµ
 	if (file1.head > file2.head)
 		return false;
 	else if (file1.head < file2.head)
 		return true;
 
-	// Çìµå°¡ °°´Ù¸é number ºñ±³
+	// í—¤ë“œê°€ ê°™ë‹¤ë©´ number ë¹„êµ
 	if (file1.number > file2.number)
 		return false;
 	else if (file1.number < file2.number)
 		return true;
 
-	// number ±îÁö °°´Ù¸é µé¾î¿Â ¼ø¼­ À¯Áö
+	// number ê¹Œì§€ ê°™ë‹¤ë©´ ë“¤ì–´ì˜¨ ìˆœì„œ ìœ ì§€
 	return file1.inputNumber < file2.inputNumber;
 }
 
-// ¹®ÀÚ°¡ ¼ýÀÚÀÎÁö Ã¼Å©ÇÏ´Â ÇÔ¼ö
+// ë¬¸ìžê°€ ìˆ«ìžì¸ì§€ ì²´í¬í•˜ëŠ” í•¨ìˆ˜
 bool IsNumber(char c)
 {
 	if (c >= '0' && c <= '9')
@@ -57,17 +57,13 @@ vector<string> solution(vector<string> files)
 		int idx = 0;
 		for (; idx < file.size(); idx++)
 		{
-			// ¹®ÀÚ¿­ Ã¼Å©
-			if (IsNumber(file[idx]) == false)
+			// ë¬¸ìžì—´ ì²´í¬
+			if (!IsNumber(file[idx]))
 			{
 				if (file[idx] >= 'A' && file[idx] <= 'Z')
-				{
 					tempFile.head += (file[idx] + 32);
-				}
 				else
-				{
 					tempFile.head += file[idx];
-				}
 			}
 			else
 			{
@@ -78,7 +74,7 @@ vector<string> solution(vector<string> files)
 		string strNumber;
 		for (; idx < file.size(); idx++)
 		{
-			if (file[idx] >= '0' && file[idx] <= '9')
+			if (IsNumber(file[idx]))
 				strNumber += file[idx];
 			else
 				break;
@@ -95,9 +91,7 @@ vector<string> solution(vector<string> files)
 	sort(sortFiles.begin(), sortFiles.end(), Compare);
 
 	for (auto sortFile : sortFiles)
-	{
 		answer.push_back(sortFile.fullName);
-	}
 
 	return answer;
 }
