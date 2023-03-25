@@ -28,32 +28,24 @@ vector<string> split(string str, char delimiter)
 
 string changeSharptoLowerCase(string str)
 {
-    string result = " ";
+    string result;
 
-    vector<int> resultIdx;
     int tempIdx = 0;
-    while ((tempIdx = str.find('#', tempIdx)) != std::string::npos)
-    {
-        tempIdx += 1;
-        resultIdx.push_back(tempIdx);
-    }
-
     for (int i = 0; i < str.size(); ++i)
     {
-        for (int j = 0; j < resultIdx.size(); ++j)
+        if (str[i + 1] == '#')
         {
-            if (i != resultIdx[j]-1)
-            {
-                result += str[i];
-            }
+            result.push_back(str[i] + 32);
+        }
+        else if (str[i] =='#')
+        {
+            continue;
+        }
+        else
+        {
+            result.push_back(str[i]);
         }
     }
-
-    for (int i = 0; i < resultIdx.size(); ++i)
-    {
-        result[resultIdx[i]-1] += 32;
-    }
-    
     return result;
 }
 
@@ -73,7 +65,7 @@ string solution(string m, vector<string> musicinfos)
         int endT;
         startT = (stoi(split(split(musicinfos[i], ',')[0], ':')[0]) * 60 + stoi(split(split(musicinfos[i], ',')[0], ':')[1]));
         endT = (stoi(split(split(musicinfos[i], ',')[1], ':')[0]) * 60 + stoi(split(split(musicinfos[i], ',')[1], ':')[1]));
-        temp.runningTime = endT - startT;
+        temp.runningTime = endT - startT + 1;
         temp.name = split(musicinfos[i], ',')[2];
         temp.info = changeSharptoLowerCase(split(musicinfos[i], ',')[3]);
 
@@ -82,32 +74,48 @@ string solution(string m, vector<string> musicinfos)
 
     for (int i = 0; i < musics.size(); ++i)
     {
-        for (int j = 0; j <= musics[i].runningTime; ++j)
+        for (int j = 0; j < musics[i].runningTime; ++j)
         {
             radioMelody += musics[i].info[j % musics[i].info.size()];
         }
         radioMelody += ' ';
     }
 
-    vector<int> answerIdx;
-    int tempIdx = 0;
-    while ((tempIdx = radioMelody.find(changeM, tempIdx)) != std::string::npos)
-    {
-        tempIdx += changeM.length();
-        answerIdx.push_back(tempIdx);
-    }
-    
-    vector<int> answerCandidate;
-    vector<int> finalRunningT;
-    for (int i = 0; i < musics.size(); ++i)
-    {
-        int tempRunningT = 0;
-        finalRunningT.push_back(tempRunningT += musics[i].runningTime);
-    }
-    for (int i = 0; i < answerIdx.size(); ++i)
-    {
-    }
+    vector<int> answerCand;
 
+    if (radioMelody.find(changeM) == -1)
+    {
+        answer = "(None)";
+    }
+    else
+    {
+        int tempIdx = 0;
+        while (radioMelody.find(changeM, tempIdx) != -1)
+        {
+            int checkRunningT = 0;
+            for (int i = 0; i < musics.size(); ++i)
+            {
+                checkRunningT += musics[i].runningTime;
+                if (radioMelody.find(changeM, tempIdx) <= checkRunningT)
+                {
+                    answerCand.push_back(i);
+                    break;
+                }
+                checkRunningT += 1;
+            }
+            tempIdx = radioMelody.find(changeM, tempIdx) + 1;
+        }
+
+        int maxRunningT = 0;
+        for (int i = 0; i < answerCand.size(); ++i)
+        {
+            if (musics[answerCand[i]].runningTime > maxRunningT)
+            {
+                maxRunningT = musics[answerCand[i]].runningTime;
+                answer = musics[answerCand[i]].name;
+            }
+        }
+    }
     return answer;
 }
 
