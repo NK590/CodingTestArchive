@@ -7,32 +7,30 @@
 
 using namespace std;
 
-vector<vector<pair<int, int>>> OrganizePair(vector<pair<pair<int, int>, pair<int, int>>> &temp)
+vector<vector<pair<int, int>>> OrganizePair(vector<pair<pair<int, int>, pair<int, int>>>& temp)
 {
     vector<vector<pair<int, int>>> results;
-
-    for (int i = 0; i < pow(2, temp.size()); ++i)
+    do
     {
-        do
+        for (int i = 0; i < pow(2, temp.size()); ++i)
         {
             vector<pair<int, int>> tempA;
-            for (int j = temp.size(); j > 0; --j)
+            for (int j = 0; j < temp.size(); ++j)
             {
                 if ((i >> j) & 1)
                 {
-                    tempA.push_back(temp[temp.size() - j].first);
-                    tempA.push_back(temp[temp.size() - j].second);
+                    tempA.push_back(temp[j].first);
+                    tempA.push_back(temp[j].second);
                 }
                 else
                 {
-                    tempA.push_back(temp[temp.size() - j].second);
-                    tempA.push_back(temp[temp.size() - j].first);
+                    tempA.push_back(temp[j].second);
+                    tempA.push_back(temp[j].first);
                 }
             }
             results.push_back(tempA);
-        } while (next_permutation(temp.begin(), temp.end()));
-    }
-
+        }
+    } while (next_permutation(temp.begin(), temp.end()));
     return results;
 }
 
@@ -41,7 +39,7 @@ bool InRange(int x, int y)
     return (0 <= x && x < 4 && 0 <= y && y < 4);
 }
 
-pair<int, int> FindNext(int dir, int x, int y, vector<vector<int>> &board)
+pair<int, int> FindNext(int dir, int x, int y, vector<vector<int>>& board)
 {
     vector<pair<int, int>> nextDir = { {1,0},{0,1},{-1,0},{0,-1} };
 
@@ -49,7 +47,7 @@ pair<int, int> FindNext(int dir, int x, int y, vector<vector<int>> &board)
     {
         return { x + nextDir[dir].first, y + nextDir[dir].second };
     }
-    else 
+    else
     {
         dir -= 4;
         while (InRange(x + nextDir[dir].first, y + nextDir[dir].second))
@@ -80,6 +78,11 @@ int BFS(pair<int, int> start, pair<int, int> end, vector<vector<int>>& board)
         int level = que.front().second;
         que.pop();
 
+        if (x == end.first && y == end.second)
+        {
+            return level + 1;
+        }
+
         for (int i = 0; i < 8; ++i)
         {
             pair<int, int> nextCard = FindNext(i, x, y, board);
@@ -88,10 +91,6 @@ int BFS(pair<int, int> start, pair<int, int> end, vector<vector<int>>& board)
             if (InRange(nextX, nextY) && !visited[nextX][nextY])
             {
                 visited[nextX][nextY] = true;
-                if (nextX == end.first && nextY == end.second)
-                {
-                    return level + 1;
-                }
                 que.push({ { nextX,nextY }, level + 1 });
             }
         }
@@ -138,13 +137,21 @@ int solution(vector<vector<int>> board, int r, int c)
 
     vector<int> candidates;
 
+    vector<vector<int>> boardA;
+
     for (int i = 0; i < organizedPair.size(); ++i)
     {
-        organizedPair[i].insert(organizedPair[i].begin(), make_pair(r,c));
+        boardA = board;
+        organizedPair[i].insert(organizedPair[i].begin(), make_pair(r, c));
         int tempI = 0;
-        for (int j = 0; j < organizedPair[0].size() -1; ++j)
+        for (int j = 0; j < organizedPair[0].size() - 1; ++j)
         {
-            tempI += BFS(organizedPair[i][j], organizedPair[i][j + 1], board);
+            tempI += BFS(organizedPair[i][j], organizedPair[i][j + 1], boardA);
+            if (j % 2 == 1)
+            {
+                boardA[organizedPair[i][j].first][organizedPair[i][j].second] = 0;
+                boardA[organizedPair[i][j + 1].first][organizedPair[i][j + 1].second] = 0;
+            }
         }
         candidates.push_back(tempI);
     }
