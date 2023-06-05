@@ -1,63 +1,58 @@
-// 백준 1759 - 암호 만들기
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class Main {
-
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        String[] str = br.readLine().split(" ");
-        int L = Integer.valueOf(str[0]);
-        int C = Integer.valueOf(str[1]);
-        str = br.readLine().split(" ");
-        boolean[] gather = new boolean[C];
-        boolean[] contains = new boolean[C];
-        List<String> gatherList = Arrays.asList("a", "e", "u", "i", "o");
-
-        Arrays.fill(gather, false);
-        Arrays.sort(str);
-
-        for(int i = 0; i < C; i++) {
-            if(gatherList.contains(str[i]))
-                gather[i] = true;
-        }
-
-        fn(L, 0, 0, 0, str, gather, contains, bw);
-
-        bw.flush();
-        bw.close();
-    }
-
-    public static void fn(int L, int cnt, int a, int idx, String[] str, boolean[] gather, boolean[] contains, BufferedWriter bw) throws IOException {
-        if(L == cnt) {
-            if(a == 0 || cnt - a < 2)
-                return;
-
-            for(int i = 0; i < str.length; i++) {
-                if(contains[i])
-                    bw.append(str[i]);
+class Solution {
+    public int[] solution(int[] fees, String[] records) {
+        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> usageTimeMap = new HashMap<>();
+        
+        for(String record : records) {
+            String[] str = record.split(" ");
+            String time = str[0];
+            String number = str[1];
+            String type = str[2];
+            
+            if(type.equals("IN")) {
+                map.put(number, parseTime(time));
+            } else if(type.equals("OUT")) {
+                usageTimeMap.put(number, usageTimeMap.getOrDefault(number, 0) + parseTime(time) - map.get(number));
+                map.remove(number);
             }
-
-            bw.append("\n");
-            return;
         }
-
-        if(idx == str.length)
-            return;
-
-        contains[idx] = true;
-        fn(L, cnt+1, gather[idx] ? a+1 : a, idx+1, str, gather, contains, bw);
-        contains[idx] = false;
-
-        fn(L, cnt, a, idx+1, str, gather, contains, bw);
+        
+        for(String key : map.keySet()) {            
+            usageTimeMap.put(key, usageTimeMap.getOrDefault(key, 0) + parseTime("23:59") - map.get(key));
+        }
+        
+        List<String> keys = new ArrayList<>(usageTimeMap.keySet());
+        Collections.sort(keys);        
+        int[] answer = new int[keys.size()];
+        
+        int idx = 0;
+        for(String key : keys) {            
+            int usageTime = usageTimeMap.get(key);     
+            int amount = fees[1];
+            
+            // System.out.println(key + " : " + usageTime);
+            usageTime -= fees[0]; 
+            
+            if(usageTime > 0) {
+                amount += (usageTime / fees[2]) * fees[3];
+                
+                if((usageTime % fees[2]) > 0) {
+                    amount += fees[3];
+                } 
+            }
+            
+            answer[idx++] = amount;
+        }
+        
+        
+        return answer;
+    }
+    
+    public int parseTime(String time) {
+        String[] str = time.split(":");
+        
+        return 60 * Integer.valueOf(str[0]) + Integer.valueOf(str[1]);
     }
 }
